@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SafeLinks.Controllers;
@@ -9,7 +10,7 @@ namespace SafeLinks.Test
     public class LinkControllerTests
     {
         [TestMethod]
-        public void GetLinkLocation_ReturnsManagerResult()
+        public void GetLinkLocation_RedirectExists_ReturnsUrl()
         {
             var mockManager = new Mock<ILinkManager>();
 
@@ -23,6 +24,23 @@ namespace SafeLinks.Test
 
             mockManager.VerifyAll();
             Assert.AreEqual("http://www.example.com/redirect", result.Value);
+        }
+
+        [TestMethod]
+        public void GetLinkLocation_RedirectDoesNotExist_Returns400()
+        {
+            var mockManager = new Mock<ILinkManager>();
+
+            mockManager
+                .Setup(x => x.GetLinkLocation("http://www.example.com"))
+                .Returns<string>(null)
+                .Verifiable();
+
+            var controller = new LinkController(mockManager.Object);
+            var result = controller.GetLinkLocation("http://www.example.com");
+
+            mockManager.VerifyAll();
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestResult));
         }
     }
 }

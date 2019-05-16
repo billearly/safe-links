@@ -1,5 +1,6 @@
 using SafeLinks.Source;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace SafeLinks.Managers
@@ -15,13 +16,45 @@ namespace SafeLinks.Managers
 
         public string GetLinkLocation(string url)
         {
-            // Verify that its a url
-            // Verify that its on a list of known domains
+            var uri = ConvertToUri(url);
 
-            var decodedUrl = WebUtility.UrlDecode(url);
-            var uri = new Uri(decodedUrl);
+            if (uri == null)
+            {
+                return null;
+            }
 
-            return _source.GetLinkLocation(uri);
+            return IsUrlShortenerDomain(uri)
+                ? _source.GetLinkLocation(uri)
+                : null;
+        }
+
+        private Uri ConvertToUri(string url)
+        {
+            Uri uri = null;
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                var decodedUrl = WebUtility.UrlDecode(url);
+                var isUri = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
+
+                if (isUri)
+                {
+                    uri = new Uri(decodedUrl);
+                }
+            }
+
+            return uri;
+        }
+
+        private bool IsUrlShortenerDomain(Uri uri)
+        {
+            var knownDomains = new string[]
+            {
+                "bit.ly",
+                "tiny.cc"
+            };
+
+            return knownDomains.Any(x => x == uri.Host);
         }
     }
 }
