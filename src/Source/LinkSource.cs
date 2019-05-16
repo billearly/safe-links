@@ -13,10 +13,10 @@ namespace SafeLinks.Source
             _clientFactory = clientFactory;
         }
 
-        public string GetLinkLocation(Uri url)
+        public string GetLinkLocation(Uri uri)
         {
-            var client = _clientFactory.CreateClient("customer-handler");
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var client = _clientFactory.CreateClient("custom-handler");
+            var request = new HttpRequestMessage(HttpMethod.Head, uri);
 
             var response = client.SendAsync(request);
             response.Wait();
@@ -26,7 +26,7 @@ namespace SafeLinks.Source
                 return response.Result.Headers.Location.ToString();
             }
 
-            throw new WebException($"Status code was not 301 for uri {url}");
+            throw new WebException($"Status code was not 301 for uri {uri.OriginalString}");
         }
     }
 }

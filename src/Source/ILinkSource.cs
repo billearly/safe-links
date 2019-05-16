@@ -4,6 +4,6 @@ namespace SafeLinks.Source
 {
     public interface ILinksSource
     {
-        string GetLinkLocation(Uri url);
+        string GetLinkLocation(Uri uri);
     }
 }

@@ -15,6 +15,9 @@ namespace SafeLinks.Managers
 
         public string GetLinkLocation(string url)
         {
+            // Verify that its a url
+            // Verify that its on a list of known domains
+
             var decodedUrl = WebUtility.UrlDecode(url);
             var uri = new Uri(decodedUrl);
 

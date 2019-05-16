@@ -21,6 +21,3 @@ namespace SafeLinks.Controllers
         }
     }
 }
-
-
-//https://bit.ly/IFHzvO
