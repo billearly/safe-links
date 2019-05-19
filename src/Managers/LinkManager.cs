@@ -1,3 +1,4 @@
+using SafeLinks.Models;
 using SafeLinks.Source;
 using System;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace SafeLinks.Managers
             _source = source;
         }
 
-        public string GetLinkLocation(string url)
+        public RedirectInfo GetLinkLocation(string url)
         {
             var uri = ConvertToUri(url);
 
@@ -23,7 +24,12 @@ namespace SafeLinks.Managers
                 throw new ArgumentException($"'{uri.Host}' is not a known url shortener domain");
             }
 
-            return _source.GetLinkLocation(uri);
+            var linkLocation = _source.GetLinkLocation(uri);
+
+            return new RedirectInfo
+            {
+                Location = linkLocation
+            };
         }
 
         private Uri ConvertToUri(string url)

@@ -20,11 +20,11 @@ namespace SafeLinks.Test
                 .Verifiable();
 
             var manager = new LinkManager(mockSource.Object);
-            var result = manager.GetLinkLocation("http://bit.ly/abc123");
+            var redirectInfo = manager.GetLinkLocation("http://bit.ly/abc123");
 
             mockSource.VerifyAll();
 
-            Assert.AreEqual("http://www.example.com/redirect", result);
+            Assert.AreEqual("http://www.example.com/redirect", redirectInfo.Location);
         }
 
         [TestMethod]

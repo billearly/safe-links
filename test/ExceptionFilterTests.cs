@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using SafeLinks.Filters;
-using SafeLinks.Model;
+using SafeLinks.Models;
 
 namespace SafeLinks.Test
 {

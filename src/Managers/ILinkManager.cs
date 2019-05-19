@@ -1,7 +1,9 @@
+using SafeLinks.Models;
+
 namespace SafeLinks.Managers
 {
     public interface ILinkManager
     {
-        string GetLinkLocation(string url);
+        RedirectInfo GetLinkLocation(string url);
     }
 }

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace SafeLinks.Model
+namespace SafeLinks.Models
 {
     public class ErrorResult
     {

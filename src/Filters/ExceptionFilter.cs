@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SafeLinks.Model;
+using SafeLinks.Models;
 using System;
 using System.Net;
 

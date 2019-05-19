@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeLinks.Managers;
+using SafeLinks.Models;
 
 namespace SafeLinks.Controllers
 {
@@ -15,19 +16,9 @@ namespace SafeLinks.Controllers
         }
 
         [HttpGet("{url}")]
-        public ActionResult<string> GetLinkLocation(string url)
+        public ActionResult<RedirectInfo> GetLinkLocation(string url)
         {
-            var linkLocation = _manager.GetLinkLocation(url);
-
-            if (linkLocation == null)
-            {
-                // Need to throw an exception in the manager when we know its not a valid uri
-                // Have the exception filter handle sending back the 400
-                // Because not every null result is a bad request
-                return BadRequest();
-            }
-
-            return linkLocation;
+            return _manager.GetLinkLocation(url);
         }
     }
 }
