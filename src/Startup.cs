@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SafeLinks.Filters;
 using SafeLinks.Managers;
 using SafeLinks.Source;
 
@@ -28,9 +29,14 @@ namespace safelinks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => 
+            {
+                options.Filters.Add(typeof(ExceptionFilter));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddScoped<ILinkManager, LinkManager>();
             services.AddScoped<ILinksSource, LinkSource>();
+
             services.AddHttpClient("custom-handler")
                 .ConfigurePrimaryHttpMessageHandler(() =>
                 {

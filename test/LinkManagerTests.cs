@@ -23,31 +23,53 @@ namespace SafeLinks.Test
             var result = manager.GetLinkLocation("http://bit.ly/abc123");
 
             mockSource.VerifyAll();
+
             Assert.AreEqual("http://www.example.com/redirect", result);
         }
 
         [TestMethod]
-        public void GetLinkLocation_WithInvalidUri_ReturnsNull()
+        public void GetLinkLocation_WithInvalidUri_ThrowsException()
         {
             var mockSource = new Mock<ILinksSource>();
             var manager = new LinkManager(mockSource.Object);
 
-            var result = manager.GetLinkLocation("invalid");
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => manager.GetLinkLocation("invalid")
+            );
 
             mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
-            Assert.IsNull(result);
+
+            Assert.AreEqual("'invalid' is not a valid uri", ex.Message);
         }
 
         [TestMethod]
-        public void GetLinkLocation_WithInvalidDomain_ReturnsNull()
+        public void GetLinkLocation_WithEmptyString_ThrowsException()
         {
             var mockSource = new Mock<ILinksSource>();
             var manager = new LinkManager(mockSource.Object);
 
-            var result = manager.GetLinkLocation("http://www.example.com");
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => manager.GetLinkLocation(string.Empty)
+            );
 
             mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
-            Assert.IsNull(result);
+
+            Assert.AreEqual("'' is not a valid uri", ex.Message);
+        }
+
+        [TestMethod]
+        public void GetLinkLocation_WithInvalidDomain_ThrowsException()
+        {
+            var mockSource = new Mock<ILinksSource>();
+            var manager = new LinkManager(mockSource.Object);
+
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => manager.GetLinkLocation("http://www.example.com")
+            );
+
+            mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
+
+            Assert.AreEqual("'www.example.com' is not a known url shortener domain", ex.Message);
         }
     }
 }

@@ -18,43 +18,37 @@ namespace SafeLinks.Managers
         {
             var uri = ConvertToUri(url);
 
-            if (uri == null)
+            if (!IsUrlShortenerDomain(uri))
             {
-                return null;
+                throw new ArgumentException($"'{uri.Host}' is not a known url shortener domain");
             }
 
-            return IsUrlShortenerDomain(uri)
-                ? _source.GetLinkLocation(uri)
-                : null;
+            return _source.GetLinkLocation(uri);
         }
 
         private Uri ConvertToUri(string url)
         {
-            Uri uri = null;
+            var decodedUrl = WebUtility.UrlDecode(url);
+            var isUri = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
 
-            if (!string.IsNullOrEmpty(url))
+            if (!isUri)
             {
-                var decodedUrl = WebUtility.UrlDecode(url);
-                var isUri = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
-
-                if (isUri)
-                {
-                    uri = new Uri(decodedUrl);
-                }
+                throw new ArgumentException($"'{url}' is not a valid uri");
             }
 
-            return uri;
+            return new Uri(decodedUrl);
         }
 
         private bool IsUrlShortenerDomain(Uri uri)
         {
-            var knownDomains = new string[]
+            // This list could come from config
+            var urlShortenerDomains = new string[]
             {
                 "bit.ly",
                 "tiny.cc"
             };
 
-            return knownDomains.Any(x => x == uri.Host);
+            return urlShortenerDomains.Any(x => x == uri.Host);
         }
     }
 }
