@@ -4,8 +4,10 @@ using System.Net.Http;
 
 namespace SafeLinks.Source
 {
-    public class LinkSource : ILinksSource
+    public class LinkSource : ILinkSource
     {
+        private const string httpClientName = "no-follow-redirect";
+
         private readonly IHttpClientFactory _clientFactory;
 
         public LinkSource(IHttpClientFactory clientFactory)
@@ -15,7 +17,7 @@ namespace SafeLinks.Source
 
         public string GetLinkLocation(Uri uri)
         {
-            var client = _clientFactory.CreateClient("custom-handler");
+            var client = _clientFactory.CreateClient(httpClientName);
             var request = new HttpRequestMessage(HttpMethod.Head, uri);
 
             var response = client.SendAsync(request);

@@ -8,9 +8,9 @@ namespace SafeLinks.Managers
 {
     public class LinkManager : ILinkManager
     {
-        private readonly ILinksSource _source;
+        private readonly ILinkSource _source;
 
-        public LinkManager(ILinksSource source)
+        public LinkManager(ILinkSource source)
         {
             _source = source;
         }

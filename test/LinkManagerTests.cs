@@ -12,7 +12,7 @@ namespace SafeLinks.Test
         [TestMethod]
         public void GetLinkLocation_CallsSourceWithDecodedUri()
         {
-            var mockSource = new Mock<ILinksSource>();
+            var mockSource = new Mock<ILinkSource>();
 
             mockSource
                 .Setup(x => x.GetLinkLocation(It.Is<Uri>(uri => uri.AbsoluteUri == "http://bit.ly/abc123")))
@@ -30,7 +30,7 @@ namespace SafeLinks.Test
         [TestMethod]
         public void GetLinkLocation_WithInvalidUri_ThrowsException()
         {
-            var mockSource = new Mock<ILinksSource>();
+            var mockSource = new Mock<ILinkSource>();
             var manager = new LinkManager(mockSource.Object);
 
             var ex = Assert.ThrowsException<ArgumentException>(
@@ -45,7 +45,7 @@ namespace SafeLinks.Test
         [TestMethod]
         public void GetLinkLocation_WithEmptyString_ThrowsException()
         {
-            var mockSource = new Mock<ILinksSource>();
+            var mockSource = new Mock<ILinkSource>();
             var manager = new LinkManager(mockSource.Object);
 
             var ex = Assert.ThrowsException<ArgumentException>(
@@ -60,7 +60,7 @@ namespace SafeLinks.Test
         [TestMethod]
         public void GetLinkLocation_WithInvalidDomain_ThrowsException()
         {
-            var mockSource = new Mock<ILinksSource>();
+            var mockSource = new Mock<ILinkSource>();
             var manager = new LinkManager(mockSource.Object);
 
             var ex = Assert.ThrowsException<ArgumentException>(

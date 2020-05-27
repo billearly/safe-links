@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SafeLinks.Controllers;
@@ -17,7 +16,8 @@ namespace SafeLinks.Test
 
             mockManager
                 .Setup(x => x.GetLinkLocation("http://www.example.com"))
-                .Returns(new RedirectInfo{
+                .Returns(new RedirectInfo
+                {
                     Location = "http://www.example.com/redirect"
                 })
                 .Verifiable();
