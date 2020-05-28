@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SafeLinks.Filters;
 using SafeLinks.Managers;
 using SafeLinks.Source;
 using System.Net.Http;
@@ -25,6 +26,11 @@ namespace SafeLinks
             services
                 .AddControllers()
                 .AddNewtonsoftJson();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ExceptionFilter));
+            });
 
             services.AddScoped<ILinkSource, LinkSource>();
             services.AddScoped<ILinkManager, LinkManager>();
