@@ -23,3 +23,4 @@ To run tests
 
 * LocalEntryPoint.cs - For local development
 * LambdaEntryPoint.cs - Class that derives from **Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction**. The Lambda function (`FunctionHandlerAsync`) is defined in the base class and is supplied as the handler.
+* **aws-lambda-tools-defaults.json** and **serverless.template** have been removed as right now this is being manually deployed to AWS
