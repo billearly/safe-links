@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SafeLinks.Managers;
 using SafeLinks.Models;
@@ -16,9 +17,9 @@ namespace SafeLinks.Controllers
         }
 
         [HttpGet("{url}")]
-        public ActionResult<RedirectInfo> GetLinkLocation(string url)
+        public async Task<ActionResult<RedirectInfo>> GetLinkLocation(string url)
         {
-            return _manager.GetLinkLocation(url);
+            return await _manager.GetLinkLocationAsync(url);
         }
     }
 }
