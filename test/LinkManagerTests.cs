@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SafeLinks.Managers;
@@ -10,17 +11,17 @@ namespace SafeLinks.Test
     public class LinkManagerTests
     {
         [TestMethod]
-        public void GetLinkLocation_CallsSourceWithDecodedUri()
+        public async Task GetLinkLocation_CallsSourceWithDecodedUri()
         {
             var mockSource = new Mock<ILinkSource>();
 
             mockSource
-                .Setup(x => x.GetLinkLocation(It.Is<Uri>(uri => uri.AbsoluteUri == "http://bit.ly/abc123")))
-                .Returns("http://www.example.com/redirect")
+                .Setup(x => x.GetLinkLocationAsync(It.Is<Uri>(uri => uri.AbsoluteUri == "http://bit.ly/abc123")))
+                .Returns(Task.FromResult("http://www.example.com/redirect"))
                 .Verifiable();
 
             var manager = new LinkManager(mockSource.Object);
-            var redirectInfo = manager.GetLinkLocation("http://bit.ly/abc123");
+            var redirectInfo = await manager.GetLinkLocationAsync("http://bit.ly/abc123");
 
             mockSource.VerifyAll();
 
@@ -28,48 +29,33 @@ namespace SafeLinks.Test
         }
 
         [TestMethod]
-        public void GetLinkLocation_WithInvalidUri_ThrowsException()
+        public async Task GetLinkLocation_WithInvalidUri_ThrowsException()
         {
             var mockSource = new Mock<ILinkSource>();
             var manager = new LinkManager(mockSource.Object);
 
-            var ex = Assert.ThrowsException<ArgumentException>(
-                () => manager.GetLinkLocation("invalid")
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => manager.GetLinkLocationAsync("invalid")
             );
 
-            mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
+            mockSource.Verify(x => x.GetLinkLocationAsync(It.IsAny<Uri>()), Times.Never);
 
             Assert.AreEqual("'invalid' is not a valid uri", ex.Message);
         }
 
         [TestMethod]
-        public void GetLinkLocation_WithEmptyString_ThrowsException()
+        public async Task GetLinkLocation_WithEmptyString_ThrowsException()
         {
             var mockSource = new Mock<ILinkSource>();
             var manager = new LinkManager(mockSource.Object);
 
-            var ex = Assert.ThrowsException<ArgumentException>(
-                () => manager.GetLinkLocation(string.Empty)
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => manager.GetLinkLocationAsync(string.Empty)
             );
 
-            mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
+            mockSource.Verify(x => x.GetLinkLocationAsync(It.IsAny<Uri>()), Times.Never);
 
             Assert.AreEqual("'' is not a valid uri", ex.Message);
-        }
-
-        [TestMethod]
-        public void GetLinkLocation_WithInvalidDomain_ThrowsException()
-        {
-            var mockSource = new Mock<ILinkSource>();
-            var manager = new LinkManager(mockSource.Object);
-
-            var ex = Assert.ThrowsException<ArgumentException>(
-                () => manager.GetLinkLocation("http://www.example.com")
-            );
-
-            mockSource.Verify(x => x.GetLinkLocation(It.IsAny<Uri>()), Times.Never);
-
-            Assert.AreEqual("'www.example.com' is not a known url shortener domain", ex.Message);
         }
     }
 }

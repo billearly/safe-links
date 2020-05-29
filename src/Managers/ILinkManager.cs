@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using SafeLinks.Models;
 
 namespace SafeLinks.Managers
 {
     public interface ILinkManager
     {
-        RedirectInfo GetLinkLocation(string url);
+        Task<RedirectInfo> GetLinkLocationAsync(string url);
     }
 }

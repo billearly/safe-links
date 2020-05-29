@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SafeLinks.Controllers;
@@ -10,20 +11,20 @@ namespace SafeLinks.Test
     public class LinkControllerTests
     {
         [TestMethod]
-        public void GetLinkLocation_RedirectExists_ReturnsUrl()
+        public async Task GetLinkLocation_RedirectExists_ReturnsUrl()
         {
             var mockManager = new Mock<ILinkManager>();
 
             mockManager
-                .Setup(x => x.GetLinkLocation("http://www.example.com"))
-                .Returns(new RedirectInfo
+                .Setup(x => x.GetLinkLocationAsync("http://www.example.com"))
+                .Returns(Task.FromResult(new RedirectInfo
                 {
                     Location = "http://www.example.com/redirect"
-                })
+                }))
                 .Verifiable();
 
             var controller = new LinkController(mockManager.Object);
-            var result = controller.GetLinkLocation("http://www.example.com");
+            var result = await controller.GetLinkLocation("http://www.example.com");
             var redirectInfo = result.Value as RedirectInfo;
 
             mockManager.VerifyAll();

@@ -1,9 +1,10 @@
 using System;
+using System.Threading.Tasks;
 
 namespace SafeLinks.Source
 {
     public interface ILinkSource
     {
-        string GetLinkLocation(Uri uri);
+        Task<string> GetLinkLocationAsync(Uri uri);
     }
 }

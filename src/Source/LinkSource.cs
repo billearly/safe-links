@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SafeLinks.Source
 {
@@ -15,17 +16,16 @@ namespace SafeLinks.Source
             _clientFactory = clientFactory;
         }
 
-        public string GetLinkLocation(Uri uri)
+        public async Task<string> GetLinkLocationAsync(Uri uri)
         {
             var client = _clientFactory.CreateClient(httpClientName);
             var request = new HttpRequestMessage(HttpMethod.Head, uri);
 
-            var response = client.SendAsync(request);
-            response.Wait();
+            var response = await client.SendAsync(request);
 
-            if (response.Result.StatusCode == HttpStatusCode.MovedPermanently)
+            if (response.StatusCode == HttpStatusCode.MovedPermanently)
             {
-                return response.Result.Headers.Location.ToString();
+                return response.Headers.Location.ToString();
             }
 
             throw new WebException($"Status code was not 301 for uri {uri.OriginalString}");

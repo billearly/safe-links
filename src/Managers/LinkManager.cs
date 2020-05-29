@@ -3,6 +3,7 @@ using SafeLinks.Source;
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SafeLinks.Managers
 {
@@ -15,16 +16,10 @@ namespace SafeLinks.Managers
             _source = source;
         }
 
-        public RedirectInfo GetLinkLocation(string url)
+        public async Task<RedirectInfo> GetLinkLocationAsync(string url)
         {
             var uri = ConvertToUri(url);
-
-            if (!IsUrlShortenerDomain(uri))
-            {
-                throw new ArgumentException($"'{uri.Host}' is not a known url shortener domain");
-            }
-
-            var linkLocation = _source.GetLinkLocation(uri);
+            var linkLocation = await _source.GetLinkLocationAsync(uri);
 
             return new RedirectInfo
             {
@@ -43,18 +38,6 @@ namespace SafeLinks.Managers
             }
 
             return new Uri(decodedUrl);
-        }
-
-        private bool IsUrlShortenerDomain(Uri uri)
-        {
-            // This list could come from config
-            var urlShortenerDomains = new string[]
-            {
-                "bit.ly",
-                "tiny.cc"
-            };
-
-            return urlShortenerDomains.Any(x => x == uri.Host);
         }
     }
 }
