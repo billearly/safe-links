@@ -1,10 +1,11 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SafeLinks.Source
 {
     public interface ILinkSource
     {
-        Task<string> GetLinkLocationAsync(Uri uri);
+        Task<HttpResponseMessage> GetLinkInfoAsync(Uri uri);
     }
 }

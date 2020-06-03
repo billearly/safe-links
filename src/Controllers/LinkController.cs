@@ -9,17 +9,17 @@ namespace SafeLinks.Controllers
     [ApiController]
     public class LinkController : ControllerBase
     {
-        private readonly ILinkManager _manager;
+        private readonly ILinkManager manager;
 
         public LinkController(ILinkManager manager)
         {
-            _manager = manager;
+            this.manager = manager;
         }
 
         [HttpGet("{url}")]
-        public async Task<ActionResult<RedirectInfo>> GetLinkLocation(string url)
+        public async Task<ActionResult<LinkInfo>> GetLinkInfo(string url)
         {
-            return await _manager.GetLinkLocationAsync(url);
+            return await manager.GetLinkInfoAsync(url);
         }
     }
 }

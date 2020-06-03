@@ -16,16 +16,16 @@ namespace SafeLinks.Test
             var mockManager = new Mock<ILinkManager>();
 
             mockManager
-                .Setup(x => x.GetLinkLocationAsync("http://www.example.com"))
-                .Returns(Task.FromResult(new RedirectInfo
+                .Setup(x => x.GetLinkInfoAsync("http://www.example.com"))
+                .Returns(Task.FromResult(new LinkInfo
                 {
                     Location = "http://www.example.com/redirect"
                 }))
                 .Verifiable();
 
             var controller = new LinkController(mockManager.Object);
-            var result = await controller.GetLinkLocation("http://www.example.com");
-            var redirectInfo = result.Value as RedirectInfo;
+            var result = await controller.GetLinkInfo("http://www.example.com");
+            var redirectInfo = result.Value as LinkInfo;
 
             mockManager.VerifyAll();
             Assert.AreEqual("http://www.example.com/redirect", redirectInfo.Location);
