@@ -16,7 +16,7 @@ namespace SafeLinks.Test
     [TestClass]
     public class ExceptionFilterTests
     {
-        private ExceptionContext _context;
+        private ExceptionContext context;
 
         [TestInitialize]
         public void Initialize()
@@ -29,7 +29,7 @@ namespace SafeLinks.Test
             var actionContext = new ActionContext(mockHttpContext, mockRouteData, mockActionDescriptor);
             var exceptionContext = new ExceptionContext(actionContext, mockFilterMetaDataList);
 
-            _context = exceptionContext;
+            context = exceptionContext;
         }
 
         [TestMethod]
@@ -39,12 +39,12 @@ namespace SafeLinks.Test
                 e => e.Message == "ArgumentException message"
             );
 
-            _context.Exception = exception;
+            context.Exception = exception;
 
             var filter = new ExceptionFilter();
-            filter.OnException(_context);
+            filter.OnException(context);
 
-            var jsonResult = _context.Result as JsonResult;
+            var jsonResult = context.Result as JsonResult;
             var resultObj = JsonConvert.DeserializeObject<ErrorResult>(JsonConvert.SerializeObject(jsonResult.Value));
 
             Assert.AreEqual(400, jsonResult.StatusCode);
@@ -57,12 +57,12 @@ namespace SafeLinks.Test
         {
             var exception = Mock.Of<Exception>();
 
-            _context.Exception = exception;
+            context.Exception = exception;
 
             var filter = new ExceptionFilter();
-            filter.OnException(_context);
+            filter.OnException(context);
 
-            var jsonResult = _context.Result as JsonResult;
+            var jsonResult = context.Result as JsonResult;
             var resultObj = JsonConvert.DeserializeObject<ErrorResult>(JsonConvert.SerializeObject(jsonResult.Value));
 
 

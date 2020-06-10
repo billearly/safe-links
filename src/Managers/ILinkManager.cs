@@ -5,6 +5,6 @@ namespace SafeLinks.Managers
 {
     public interface ILinkManager
     {
-        Task<RedirectInfo> GetLinkLocationAsync(string url);
+        Task<LinkInfo> GetLinkInfoAsync(string url);
     }
 }

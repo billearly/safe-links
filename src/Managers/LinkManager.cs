@@ -1,7 +1,6 @@
 using SafeLinks.Models;
 using SafeLinks.Source;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -9,30 +8,32 @@ namespace SafeLinks.Managers
 {
     public class LinkManager : ILinkManager
     {
-        private readonly ILinkSource _source;
+        private readonly ILinkSource source;
 
         public LinkManager(ILinkSource source)
         {
-            _source = source;
+            this.source = source;
         }
 
-        public async Task<RedirectInfo> GetLinkLocationAsync(string url)
+        public async Task<LinkInfo> GetLinkInfoAsync(string url)
         {
             var uri = ConvertToUri(url);
-            var linkLocation = await _source.GetLinkLocationAsync(uri);
+            var response = await source.GetLinkInfoAsync(uri);
 
-            return new RedirectInfo
+            return new LinkInfo
             {
-                Location = linkLocation
+                ResponseCode = (int)response.StatusCode,
+                Location = response.Headers.Location?.ToString() ?? string.Empty,
+                LinkOrigin = uri.OriginalString
             };
         }
 
         private Uri ConvertToUri(string url)
         {
             var decodedUrl = WebUtility.UrlDecode(url);
-            var isUri = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
+            var isUriString = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
 
-            if (!isUri)
+            if (!isUriString)
             {
                 throw new ArgumentException($"'{url}' is not a valid uri");
             }
