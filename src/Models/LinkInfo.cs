@@ -46,6 +46,7 @@ namespace SafeLinks.Models
 
             switch (uri.Host.ToLower())
             {
+                // Ideally these definitions lives in config, or are persisted outside the app where they can be updated
                 case "bit.ly":
                     return new ShortenerService
                     {

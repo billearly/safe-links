@@ -31,6 +31,9 @@ namespace SafeLinks.Managers
         private Uri ConvertToUri(string url)
         {
             var decodedUrl = WebUtility.UrlDecode(url);
+
+            decodedUrl = EnsureProtocolExists(decodedUrl);
+
             var isUriString = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);
 
             if (!isUriString)
@@ -39,6 +42,13 @@ namespace SafeLinks.Managers
             }
 
             return new Uri(decodedUrl);
+        }
+
+        private string EnsureProtocolExists(string url)
+        {
+            return url.StartsWith("http://") || url.StartsWith("https://")
+                ? url
+                : $"http://{url}";
         }
     }
 }
