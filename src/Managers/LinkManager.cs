@@ -31,7 +31,6 @@ namespace SafeLinks.Managers
         private Uri ConvertToUri(string url)
         {
             var decodedUrl = WebUtility.UrlDecode(url);
-
             decodedUrl = EnsureProtocolExists(decodedUrl);
 
             var isUriString = Uri.IsWellFormedUriString(decodedUrl, UriKind.Absolute);

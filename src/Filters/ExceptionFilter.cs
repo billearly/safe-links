@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using SafeLinks.Models;
 using System;
 using System.Net;
+using System.Net.Http;
 
 namespace SafeLinks.Filters
 {
@@ -20,6 +21,21 @@ namespace SafeLinks.Filters
 
                 var result = new JsonResult(error);
                 result.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                context.Result = result;
+                return;
+            }
+
+            if (context.Exception is HttpRequestException)
+            {
+                var error = new ErrorResult
+                {
+                    Status = 500,
+                    Message = "Unable to make the request"
+                };
+
+                var result = new JsonResult(error);
+                result.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                 context.Result = result;
                 return;
